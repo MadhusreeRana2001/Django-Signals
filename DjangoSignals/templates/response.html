@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <!-- SOLUTION 1: -->
+    <h4>Solution 1: <b>Request completed in {{totalTime}} seconds</b></h4>
+    <p><b>Explanation:</b> The 'post_save' signal is triggered after the creation of a new user. Inside the signal, a delay of 2 seconds had been created. The total request time here being more than 2 seconds proves that Django's signals are executed synchronously by default.</p>
+    <hr>
+
+    <!-- SOLUTION 2: -->
+    <h4>Solution 2: <b>[VIEW] User creation initiated in thread: {{thread}}</b></h4>
+    <p><b>Explanation:</b> Both the view and the signal handler display the same thread ID, which proves that Django signals are executed in the same thread as the caller. This also means that signals run synchronously by default.</p>
+    <hr>
+
+    <!-- SOLUTION 3: -->
+    <h4>Solution 3: <b>{{exceptionMessage}}</b></h4>
+    <p><b>Explanation: </b>If signals ran in a separate transaction, any action by the signal would still exist even if the view fails. However, here, when the transaction in the view is rolled back, any actions taken by the signal, such as updating the email of the created user in this case, are also rolled back, which demonstrates that by default, Django signals are part of the same database transaction as the caller.</p>
+{% endblock body %}
